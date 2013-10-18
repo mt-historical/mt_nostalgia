@@ -22,4 +22,4 @@ mobs:register_mob("mobs:rat", {
 		end
 	end,
 })
-mobs:register_spawn("mobs:rat", {"default:dirt_with_grass", "default:stone"}, 20, -1, 7000, 1, 31000)
+mobs:register_spawn("mobs:rat", {"default:grass", "default:stone"}, 20, -1, 7000, 1, 31000)
