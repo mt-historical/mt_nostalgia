@@ -76,78 +76,6 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = 'default:pick_wood',
-	recipe = {
-		{'group:wood', 'group:wood', 'group:wood'},
-		{'', 'default:stick', ''},
-		{'', 'default:stick', ''},
-	}
-})
-
-minetest.register_craft({
-	output = 'default:pick_stone',
-	recipe = {
-		{'group:stone', 'group:stone', 'group:stone'},
-		{'', 'default:stick', ''},
-		{'', 'default:stick', ''},
-	}
-})
-
-minetest.register_craft({
-	output = 'default:pick_iron',
-	recipe = {
-		{'default:iron_ingot', 'default:iron_ingot', 'default:iron_ingot'},
-		{'', 'default:stick', ''},
-		{'', 'default:stick', ''},
-	}
-})
-
-minetest.register_craft({
-	output = 'default:pick_mese',
-	recipe = {
-		{'default:mese', 'default:mese', 'default:mese'},
-		{'', 'default:stick', ''},
-		{'', 'default:stick', ''},
-	}
-})
-
-minetest.register_craft({
-	output = 'default:axe_wood',
-	recipe = {
-		{'group:wood', 'group:wood', ''},
-		{'group:wood', 'default:stick', ''},
-		{'', 'default:stick', ''},
-	}
-})
-
-minetest.register_craft({
-	output = 'default:axe_stone',
-	recipe = {
-		{'group:stone', 'group:stone', ''},
-		{'group:stone', 'default:stick', ''},
-		{'', 'default:stick', ''},
-	}
-})
-
-minetest.register_craft({
-	output = 'default:axe_iron',
-	recipe = {
-		{'default:iron_ingot', 'default:iron_ingot', ''},
-		{'default:iron_ingot', 'default:stick', ''},
-		{'', 'default:stick', ''},
-	}
-})
-
-minetest.register_craft({
-	output = 'default:axe_mese',
-	recipe = {
-		{'default:mese', 'default:mese', ''},
-		{'', 'default:stick', ''},
-		{'', 'default:stick', ''},
-	}
-})
-
-minetest.register_craft({
 	output = 'default:furnace',
 	recipe = {
 		{'default:stone', 'default:stone', 'default:stone'},
@@ -231,3 +159,151 @@ minetest.register_craft({
 	additional_wear = -0.02,
 })
 
+
+--
+--Tools
+--
+
+minetest.register_craft({
+	output = 'default:pick_wood',
+	recipe = {
+		{'group:wood', 'group:wood', 'group:wood'},
+		{'', 'default:stick', ''},
+		{'', 'default:stick', ''},
+	}
+})
+
+minetest.register_craft({
+	output = 'default:pick_stone',
+	recipe = {
+		{'group:stone', 'group:stone', 'group:stone'},
+		{'', 'default:stick', ''},
+		{'', 'default:stick', ''},
+	}
+})
+
+minetest.register_craft({
+	output = 'default:pick_iron',
+	recipe = {
+		{'default:iron_ingot', 'default:iron_ingot', 'default:iron_ingot'},
+		{'', 'default:stick', ''},
+		{'', 'default:stick', ''},
+	}
+})
+
+minetest.register_craft({
+	output = 'default:pick_mese',
+	recipe = {
+		{'default:mese', 'default:mese', 'default:mese'},
+		{'', 'default:stick', ''},
+		{'', 'default:stick', ''},
+	}
+})
+
+minetest.register_craft({
+	output = 'default:axe_wood',
+	recipe = {
+		{'group:wood', 'group:wood', ''},
+		{'group:wood', 'default:stick', ''},
+		{'', 'default:stick', ''},
+	}
+})
+
+minetest.register_craft({
+	output = 'default:axe_stone',
+	recipe = {
+		{'group:stone', 'group:stone', ''},
+		{'group:stone', 'default:stick', ''},
+		{'', 'default:stick', ''},
+	}
+})
+
+minetest.register_craft({
+	output = 'default:axe_iron',
+	recipe = {
+		{'default:iron_ingot', 'default:iron_ingot', ''},
+		{'default:iron_ingot', 'default:stick', ''},
+		{'', 'default:stick', ''},
+	}
+})
+
+minetest.register_craft({
+	output = 'default:axe_mese',
+	recipe = {
+		{'default:mese', 'default:mese', ''},
+		{'default:mese', 'default:stick', ''},
+		{'', 'default:stick', ''},
+	}
+})
+
+minetest.register_craft({
+	output = 'default:shovel_wood',
+	recipe = {
+		{'', 'group:wood', ''},
+		{'', 'default:stick', ''},
+		{'', 'default:stick', ''},
+	}
+})
+
+minetest.register_craft({
+	output = 'default:shovel_stone',
+	recipe = {
+		{'', 'group:stone', ''},
+		{'', 'default:stick', ''},
+		{'', 'default:stick', ''},
+	}
+})
+
+minetest.register_craft({
+	output = 'default:shovel_iron',
+	recipe = {
+		{'', 'default:iron_ingot', ''},
+		{'', 'default:stick', ''},
+		{'', 'default:stick', ''},
+	}
+})
+
+minetest.register_craft({
+	output = 'default:shovel_mese',
+	recipe = {
+		{'', 'default:mese', ''},
+		{'', 'default:stick', ''},
+		{'', 'default:stick', ''},
+	}
+})
+
+minetest.register_craft({
+	output = 'default:sword_wood',
+	recipe = {
+		{'', 'group:wood', ''},
+		{'', 'group:wood', ''},
+		{'', 'default:stick', ''},
+	}
+})
+
+minetest.register_craft({
+	output = 'default:sword_stone',
+	recipe = {
+		{'', 'group:stone', ''},
+		{'', 'group:stone', ''},
+		{'', 'default:stick', ''},
+	}
+})
+
+minetest.register_craft({
+	output = 'default:sword_iron',
+	recipe = {
+		{'', 'default:iron_ingot', ''},
+		{'', 'default:iron_ingot', ''},
+		{'', 'default:stick', ''},
+	}
+})
+
+minetest.register_craft({
+	output = 'default:sword_mese',
+	recipe = {
+		{'', 'default:mese', ''},
+		{'', 'default:mese', ''},
+		{'', 'default:stick', ''},
+	}
+})
