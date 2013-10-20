@@ -1,5 +1,20 @@
 -- mods/default/nodes.lua
 
+
+minetest.register_alias("default:cherry", "default:apple")
+minetest.register_alias("default:wood_glass", "default:glass")
+minetest.register_alias("default:stone_glass", "default:glass")
+minetest.register_alias("default:plankstone_floor", "default:plankstone")
+minetest.register_alias("default:pick_iron", "default:pick_steel")
+minetest.register_alias("default:axe_iron", "default:axe_steel")
+minetest.register_alias("default:shovel_iron", "default:shovel_steel")
+minetest.register_alias("default:sword_iron", "default:sword_steel")
+minetest.register_alias("default:sword_mese", "default:pick_mese")
+minetest.register_alias("default:axe_mese", "default:pick_mese")
+minetest.register_alias("default:shovel_mese", "default:pick_mese")
+minetest.register_alias("default:iron_ingot", "default:steel_ingot")
+
+
 minetest.register_node("default:stone", {
 	description = "Stone",
 	tiles = {"stone.png"},
@@ -26,7 +41,6 @@ minetest.register_node("default:fence", {
 	sounds = default.node_sound_wood_defaults(),
 })
 
-minetest.register_alias("default:plankstone_floor", "default:plankstone")
 
 minetest.register_node("default:plankstone", {
         drawtype = "normal",
@@ -39,12 +53,12 @@ minetest.register_node("default:plankstone", {
 	sounds = default.node_sound_stone_defaults(),
 })
 
-minetest.register_node("default:cherry", {
-	description = "Cherries",
+minetest.register_node("default:apple", {
+	description = "Apple",
 	drawtype = "plantlike",
 	visual_scale = 1.0,
-	tiles = {"cherry.png"},
-	inventory_image = "cherry.png",
+	tiles = {"apple.png"},
+	inventory_image = "apple.png",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
@@ -57,10 +71,11 @@ minetest.register_node("default:cherry", {
 	sounds = default.node_sound_leaves_defaults(),
 	after_place_node = function(pos, placer, itemstack)
 		if placer:is_player() then
-			minetest.set_node(pos, {name="default:cherry", param2=1})
+			minetest.set_node(pos, {name="default:apple", param2=1})
 		end
 	end,
 })
+
 
 minetest.register_node("default:stone_with_coal", {
 	description = "Coal Ore",
@@ -87,28 +102,6 @@ minetest.register_node("default:glass", {
 	drawtype = "glasslike_framed",
 	tiles = {"glass.png", "glass_streaks.png"},
         inventory_image = "glass.png^glass_streaks.png",
-	paramtype = "light",
-	sunlight_propagates = true,
-	sounds = default.node_sound_glass_defaults(),
-	groups = {cracky=3,oddly_breakable_by_hand=3},
-})
-
-minetest.register_node("default:wood_glass", {
-	description = "Wood Framed Glass",
-	drawtype = "glasslike_framed",
-	tiles = {"wood.png", "glass_streaks.png"},
-	inventory_image = "wood_glass_inv.png",
-	paramtype = "light",
-	sunlight_propagates = true,
-	sounds = default.node_sound_glass_defaults(),
-	groups = {cracky=3,oddly_breakable_by_hand=3},
-})
-
-minetest.register_node("default:stone_glass", {
-	description = "Stone Framed Glass",
-	drawtype = "glasslike_framed",
-	tiles = {"stone.png", "glass_streaks.png"},
-	inventory_image = "stone_glass_inv.png",
 	paramtype = "light",
 	sunlight_propagates = true,
 	sounds = default.node_sound_glass_defaults(),
@@ -313,16 +306,31 @@ default.chest_formspec =
 	"list[current_name;main;0,0;8,4;]"..
 	"list[current_player;main;0,5;8,4;]"
 	
+function default.get_locked_chest_formspec(pos)
+	local spos = pos.x .. "," .. pos.y .. "," ..pos.z
+	local formspec =
+		"size[8,9]"..
+		"list[nodemeta:".. spos .. ";main;0,0;8,4;]"..
+		"list[current_player;main;0,5;8,4;]"
+	return formspec
+end
+
+local function has_locked_chest_privilege(meta, player)
+	if player:get_player_name() ~= meta:get_string("owner") then
+		return false
+	end
+	return true
+end
 
 minetest.register_node("default:chest", {
 	description = "Chest",
-	tiles = {"wood.png^chest_top.png", 
-	                "wood.png^chest_top.png", 
-			"wood.png^chest_side.png",
-		        "wood.png^chest_side.png", 
-			"wood.png^chest_side.png", 
-			"wood.png^chest_front.png"},
-	inventory_image = "wood.png^chest_front.png",
+	tiles = {"chest_top.png", 
+	         "chest_top.png", 
+			 "chest_side.png",
+		     "chest_side.png", 
+			 "chest_side.png", 
+		   	 "chest_front.png"},
+	inventory_image = "chest_front.png",
 	paramtype2 = "facedir",
 	groups = {choppy=2,oddly_breakable_by_hand=2},
 	legacy_facedir_simple = true,
@@ -350,6 +358,95 @@ minetest.register_node("default:chest", {
     on_metadata_inventory_take = function(pos, listname, index, stack, player)
 		minetest.log("action", player:get_player_name()..
 				" takes stuff from chest at "..minetest.pos_to_string(pos))
+	end,
+})
+
+
+minetest.register_node("default:chest_locked", {
+	description = "Locked Chest",
+	tiles = {"chest_top.png", 
+	         "chest_top.png", 
+			 "chest_side.png",
+		     "chest_side.png", 
+			 "chest_side.png", 
+		   	 "chest_lock.png"},
+    inventory_image = "chest_lock.png",
+	paramtype2 = "facedir",
+	groups = {choppy=2,oddly_breakable_by_hand=2},
+	legacy_facedir_simple = true,
+	sounds = default.node_sound_wood_defaults(),
+	after_place_node = function(pos, placer)
+		local meta = minetest.get_meta(pos)
+		meta:set_string("owner", placer:get_player_name() or "")
+		meta:set_string("infotext", "Locked Chest (owned by "..
+				meta:get_string("owner")..")")
+	end,
+	on_construct = function(pos)
+		local meta = minetest.get_meta(pos)
+		meta:set_string("infotext", "Locked Chest")
+		meta:set_string("owner", "")
+		local inv = meta:get_inventory()
+		inv:set_size("main", 8*4)
+	end,
+	can_dig = function(pos,player)
+		local meta = minetest.get_meta(pos);
+		local inv = meta:get_inventory()
+		return inv:is_empty("main") and has_locked_chest_privilege(meta, player)
+	end,
+	allow_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
+		local meta = minetest.get_meta(pos)
+		if not has_locked_chest_privilege(meta, player) then
+			minetest.log("action", player:get_player_name()..
+					" tried to access a locked chest belonging to "..
+					meta:get_string("owner").." at "..
+					minetest.pos_to_string(pos))
+			return 0
+		end
+		return count
+	end,
+    allow_metadata_inventory_put = function(pos, listname, index, stack, player)
+		local meta = minetest.get_meta(pos)
+		if not has_locked_chest_privilege(meta, player) then
+			minetest.log("action", player:get_player_name()..
+					" tried to access a locked chest belonging to "..
+					meta:get_string("owner").." at "..
+					minetest.pos_to_string(pos))
+			return 0
+		end
+		return stack:get_count()
+	end,
+    allow_metadata_inventory_take = function(pos, listname, index, stack, player)
+		local meta = minetest.get_meta(pos)
+		if not has_locked_chest_privilege(meta, player) then
+			minetest.log("action", player:get_player_name()..
+					" tried to access a locked chest belonging to "..
+					meta:get_string("owner").." at "..
+					minetest.pos_to_string(pos))
+			return 0
+		end
+		return stack:get_count()
+	end,
+	on_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
+		minetest.log("action", player:get_player_name()..
+				" moves stuff in locked chest at "..minetest.pos_to_string(pos))
+	end,
+    on_metadata_inventory_put = function(pos, listname, index, stack, player)
+		minetest.log("action", player:get_player_name()..
+				" moves stuff to locked chest at "..minetest.pos_to_string(pos))
+	end,
+    on_metadata_inventory_take = function(pos, listname, index, stack, player)
+		minetest.log("action", player:get_player_name()..
+				" takes stuff from locked chest at "..minetest.pos_to_string(pos))
+	end,
+	on_rightclick = function(pos, node, clicker)
+		local meta = minetest.get_meta(pos)
+		if has_locked_chest_privilege(meta, clicker) then
+			minetest.show_formspec(
+				clicker:get_player_name(),
+				"default:chest_locked",
+				default.get_locked_chest_formspec(pos)
+			)
+		end
 	end,
 })
 

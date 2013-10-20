@@ -58,24 +58,6 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = 'default:wood_glass 2',
-	recipe = {
-		{'', 'default:wood',''},
-		{'default:wood', 'default:glass','default:wood'},
-		{'', 'default:wood', ''},
-	}
-})
-
-minetest.register_craft({
-	output = 'default:stone_glass 2',
-	recipe = {
-		{'', 'default:stone',''},
-		{'default:stone', 'default:glass','default:stone'},
-		{'', 'default:stone', ''},
-	}
-})
-
-minetest.register_craft({
 	output = 'default:furnace',
 	recipe = {
 		{'default:stone', 'default:stone', 'default:stone'},
@@ -92,12 +74,29 @@ minetest.register_craft({
 		{'default:wood', 'default:wood', 'default:wood'},
 	}
 })
+
+minetest.register_craft({
+	output = 'default:chest_locked',
+	recipe = {
+		{'default:wood', 'default:wood', 'default:wood'},
+		{'default:wood', 'default:steel_ingot', 'default:wood'},
+		{'default:wood', 'default:wood', 'default:wood'},
+	}
+})
+
+minetest.register_craft({
+	output = 'default:chest_locked',
+	recipe = {
+		{'default:steel_ingot'},
+		{'default:chest'},
+	}
+})
   
  --Cooking Recipes--
   
 minetest.register_craft({
 	type = "cooking",
-	output = "default:iron_ingot",
+	output = "default:steel_ingot",
 	recipe = "default:iron_lump",
 })
 

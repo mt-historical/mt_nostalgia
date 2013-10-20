@@ -15,9 +15,9 @@ minetest.register_craftitem("default:iron_lump", {
 	inventory_image = "lump_of_iron.png",
 })
 
-minetest.register_craftitem("default:iron_ingot", {
-	description = "Iron Ingot",
-	inventory_image = "iron_ingot.png",
+minetest.register_craftitem("default:steel_ingot", {
+	description = "Steel Ingot",
+	inventory_image = "steel_ingot.png",
 })
 
 minetest.register_craftitem("default:rat" ,{
