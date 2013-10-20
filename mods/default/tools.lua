@@ -46,7 +46,7 @@ minetest.register_tool("default:pick_stone", {
 
 minetest.register_tool("default:pick_steel", {
 	description = "Steel Pickaxe",
-	inventory_image = "tool_steelpick.png^",
+	inventory_image = "tool_steelpick.png",
 	tool_capabilities = {
 		full_punch_interval = 1.0,
 		max_drop_level=1,
@@ -59,7 +59,7 @@ minetest.register_tool("default:pick_steel", {
 
 minetest.register_tool("default:pick_mese", {
 	description = "Mese Pickaxe",
-	inventory_image = "tool_mesepick.png^",
+	inventory_image = "tool_mesepick.png",
 	tool_capabilities = {
 		full_punch_interval = 0.1,
 		max_drop_level=3,
