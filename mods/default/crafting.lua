@@ -182,9 +182,9 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = 'default:pick_iron',
+	output = 'default:pick_steel',
 	recipe = {
-		{'default:iron_ingot', 'default:iron_ingot', 'default:iron_ingot'},
+		{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot'},
 		{'', 'default:stick', ''},
 		{'', 'default:stick', ''},
 	}
@@ -218,19 +218,10 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = 'default:axe_iron',
+	output = 'default:axe_steel',
 	recipe = {
-		{'default:iron_ingot', 'default:iron_ingot', ''},
-		{'default:iron_ingot', 'default:stick', ''},
-		{'', 'default:stick', ''},
-	}
-})
-
-minetest.register_craft({
-	output = 'default:axe_mese',
-	recipe = {
-		{'default:mese', 'default:mese', ''},
-		{'default:mese', 'default:stick', ''},
+		{'default:steel_ingot', 'default:steel_ingot', ''},
+		{'default:steel_ingot', 'default:stick', ''},
 		{'', 'default:stick', ''},
 	}
 })
@@ -254,18 +245,9 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = 'default:shovel_iron',
+	output = 'default:shovel_steel',
 	recipe = {
-		{'', 'default:iron_ingot', ''},
-		{'', 'default:stick', ''},
-		{'', 'default:stick', ''},
-	}
-})
-
-minetest.register_craft({
-	output = 'default:shovel_mese',
-	recipe = {
-		{'', 'default:mese', ''},
+		{'', 'default:steel_ingot', ''},
 		{'', 'default:stick', ''},
 		{'', 'default:stick', ''},
 	}
@@ -290,19 +272,10 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = 'default:sword_iron',
+	output = 'default:sword_steel',
 	recipe = {
-		{'', 'default:iron_ingot', ''},
-		{'', 'default:iron_ingot', ''},
-		{'', 'default:stick', ''},
-	}
-})
-
-minetest.register_craft({
-	output = 'default:sword_mese',
-	recipe = {
-		{'', 'default:mese', ''},
-		{'', 'default:mese', ''},
+		{'', 'default:steel_ingot', ''},
+		{'', 'default:steel_ingot', ''},
 		{'', 'default:stick', ''},
 	}
 })
