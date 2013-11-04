@@ -778,9 +778,11 @@ minetest.register_abm({
 	end,
 })
 
+-- Water and lava nodes
+
 minetest.register_node("default:water_flowing", {
 	description = "Flowing Water",
-	inventory_image = "water.png",
+	tiles = { "water.png" },
 	drawtype = "flowingliquid",
 	special_tiles = {
 		{
@@ -808,9 +810,15 @@ minetest.register_node("default:water_flowing", {
 
 minetest.register_node("default:water_source", {
 	description = "Water Source",
-	inventory_image = "water.png",
 	drawtype = "liquid",
-	tiles = {"water.png"},
+	tiles = { "water.png" },
+	special_tiles = {
+		-- New-style water source material (mostly unused)
+		{
+			name="water.png",
+			backface_culling = false,
+		}
+	},
 	alpha = WATER_ALPHA,
 	paramtype = "light",
 	walkable = false,
@@ -823,6 +831,7 @@ minetest.register_node("default:water_source", {
 	liquid_alternative_flowing = "default:water_flowing",
 	liquid_alternative_source = "default:water_source",
 	liquid_viscosity = WATER_VISC,
+	freezemelt = "default:ice",
 	post_effect_color = {a=64, r=100, g=100, b=200},
 	groups = {water=3, liquid=3, puts_out_fire=1, freezes=1},
 })
@@ -831,6 +840,7 @@ minetest.register_node("default:lava_flowing", {
 	description = "Flowing Lava",
 	inventory_image = "lava.png",
 	drawtype = "flowingliquid",
+	tiles = { "lava_flowing.png" },
 	special_tiles = {
 		{
 			image="lava_flowing.png",
@@ -860,8 +870,15 @@ minetest.register_node("default:lava_flowing", {
 minetest.register_node("default:lava_source", {
 	description = "Lava Source",
 	inventory_image = "lava.png",
+	tiles = { "lava.png" },
 	drawtype = "liquid",
-	tiles = {"lava.png"},
+	special_tiles = {
+		-- New-style lava source material (mostly unused)
+		{
+			name="lava.png",
+			backface_culling = false,
+		}
+	},
 	paramtype = "light",
 	light_source = 14,
 	walkable = false,
