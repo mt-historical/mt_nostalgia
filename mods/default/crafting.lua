@@ -15,13 +15,26 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = 'default:sign_wall',
+	output = 'default:sign_yard',
 	recipe = {
 		{'group:wood', 'group:wood', 'group:wood'},
 		{'group:wood', 'group:wood', 'group:wood'},
 		{'', 'default:stick', ''},
 	}
 })
+
+minetest.register_craft({
+	type = 'shapeless',
+	output = 'default:sign_yard',
+	recipe = { 'default:sign_on_wall' }
+})
+
+minetest.register_craft({
+	type = 'shapeless',
+	output = 'default:sign_on_wall',
+	recipe = { 'default:sign_yard' }
+})
+
 
 minetest.register_craft({
 	output = 'default:torch 4',

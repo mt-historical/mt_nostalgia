@@ -229,15 +229,25 @@ minetest.register_node("default:torch", {
 	sounds = default.node_sound_defaults(),
 })
 
-minetest.register_node("default:sign_wall", {
-	description = "Sign",
+-- 0.3.x did not have a yard sign, it had only a wall sign, but the
+-- "default:sign_wall" node was modeled like a yard sign!
+--
+-- To avoid screwing maps up, the node has been renamed and aliased
+-- and a new wall-based sign has been added with a unique name.
+
+minetest.register_alias("default:sign_wall", "default:sign_yard")
+
+minetest.register_node("default:sign_yard", {
+	description = "Sign (in yard)",
 	drawtype = "nodebox",
-	tiles = {"sign.png",
-	                "sign.png",
-			"sign.png",
-			"sign.png",
-			"sign_back.png",
-			"sign.png"},
+	tiles = {
+		"sign.png",
+		"sign.png",
+		"sign.png",
+		"sign.png",
+		"sign_back.png",
+		"sign.png"
+	},
 	inventory_image = "sign.png",
 	wield_image = "sign.png",
 	paramtype = "light",
@@ -269,6 +279,50 @@ minetest.register_node("default:sign_wall", {
 		meta:set_string("infotext", '"'..fields.text..'"')
 	end,
 })
+
+minetest.register_node("default:sign_on_wall", {
+	description = "Sign (on wall)",
+	drawtype = "signlike",
+	tiles = {
+		"sign_wall.png",
+		"sign_wall.png",
+		"sign_wall.png",
+		"sign_wall.png",
+		"sign_wall_back.png",
+		"sign_wall.png"
+	},
+	inventory_image = "sign_wall.png",
+	wield_image = "sign_wall.png",
+	paramtype = "light",
+	paramtype2 = "wallmounted",
+	selection_box = {
+		type = "wallmounted",
+		--wall_top = <default>
+		--wall_bottom = <default>
+		--wall_side = <default>
+	},
+	sunlight_propagates = true,
+	walkable = false,
+	groups = {choppy=2,dig_immediate=2,attached_node=1},
+	legacy_wallmounted = true,
+	sounds = default.node_sound_defaults(),
+	on_construct = function(pos)
+		--local n = minetest.get_node(pos)
+		local meta = minetest.get_meta(pos)
+		meta:set_string("formspec", "field[text;;${text}]")
+		meta:set_string("infotext", "\"\"")
+	end,
+	on_receive_fields = function(pos, formname, fields, sender)
+		--print("Sign at "..minetest.pos_to_string(pos).." got "..dump(fields))
+		local meta = minetest.get_meta(pos)
+		fields.text = fields.text or ""
+		print((sender:get_player_name() or "").." wrote \""..fields.text..
+				"\" to sign at "..minetest.pos_to_string(pos))
+		meta:set_string("text", fields.text)
+		meta:set_string("infotext", '"'..fields.text..'"')
+	end,
+})
+
 
 minetest.register_node("default:ladder", {
 	description = "Ladder",
