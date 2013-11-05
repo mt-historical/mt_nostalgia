@@ -229,15 +229,25 @@ minetest.register_node("default:torch", {
 	sounds = default.node_sound_defaults(),
 })
 
-minetest.register_node("default:sign_wall", {
-	description = "Sign",
+-- 0.3.x did not have a yard sign, it had only a wall sign, but the
+-- "default:sign_wall" node was modeled like a yard sign!
+--
+-- To avoid screwing maps up, the node has been renamed and aliased
+-- and a new wall-based sign has been added with a unique name.
+
+minetest.register_alias("default:sign_wall", "default:sign_yard")
+
+minetest.register_node("default:sign_yard", {
+	description = "Sign (in yard)",
 	drawtype = "nodebox",
-	tiles = {"sign.png",
-	                "sign.png",
-			"sign.png",
-			"sign.png",
-			"sign_back.png",
-			"sign.png"},
+	tiles = {
+		"sign.png",
+		"sign.png",
+		"sign.png",
+		"sign.png",
+		"sign_back.png",
+		"sign.png"
+	},
 	inventory_image = "sign.png",
 	wield_image = "sign.png",
 	paramtype = "light",
@@ -269,6 +279,50 @@ minetest.register_node("default:sign_wall", {
 		meta:set_string("infotext", '"'..fields.text..'"')
 	end,
 })
+
+minetest.register_node("default:sign_on_wall", {
+	description = "Sign (on wall)",
+	drawtype = "signlike",
+	tiles = {
+		"sign_wall.png",
+		"sign_wall.png",
+		"sign_wall.png",
+		"sign_wall.png",
+		"sign_wall_back.png",
+		"sign_wall.png"
+	},
+	inventory_image = "sign_wall.png",
+	wield_image = "sign_wall.png",
+	paramtype = "light",
+	paramtype2 = "wallmounted",
+	selection_box = {
+		type = "wallmounted",
+		--wall_top = <default>
+		--wall_bottom = <default>
+		--wall_side = <default>
+	},
+	sunlight_propagates = true,
+	walkable = false,
+	groups = {choppy=2,dig_immediate=2,attached_node=1},
+	legacy_wallmounted = true,
+	sounds = default.node_sound_defaults(),
+	on_construct = function(pos)
+		--local n = minetest.get_node(pos)
+		local meta = minetest.get_meta(pos)
+		meta:set_string("formspec", "field[text;;${text}]")
+		meta:set_string("infotext", "\"\"")
+	end,
+	on_receive_fields = function(pos, formname, fields, sender)
+		--print("Sign at "..minetest.pos_to_string(pos).." got "..dump(fields))
+		local meta = minetest.get_meta(pos)
+		fields.text = fields.text or ""
+		print((sender:get_player_name() or "").." wrote \""..fields.text..
+				"\" to sign at "..minetest.pos_to_string(pos))
+		meta:set_string("text", fields.text)
+		meta:set_string("infotext", '"'..fields.text..'"')
+	end,
+})
+
 
 minetest.register_node("default:ladder", {
 	description = "Ladder",
@@ -473,12 +527,14 @@ default.furnace_inactive_formspec =
 
 minetest.register_node("default:furnace", {
 	description = "Furnace",
-	tiles = {"stone.png", 
-	                "stone.png", 
-			"stone.png",
-		        "stone.png", 
-			"stone.png", 
-			"furnace_front.png"},
+	tiles = {
+		"furnace_top.png", 
+		"furnace_bottom.png", 
+		"furnace_side.png",
+		"furnace_side.png", 
+		"furnace_side.png", 
+		"furnace_front.png"
+	},
 	inventory_image = "furnace_front.png",
 	paramtype2 = "facedir",
 	groups = {cracky=2},
@@ -546,12 +602,14 @@ minetest.register_node("default:furnace", {
 
 minetest.register_node("default:furnace_active", {
 	description = "Furnace",
-	tiles = {"stone.png", 
-	                "stone.png", 
-			"stone.png",
-		        "stone.png", 
-			"stone.png", 
-			"furnace_front_active.png"},
+	tiles = {
+		"furnace_top.png", 
+		"furnace_bottom.png", 
+		"furnace_side.png",
+		"furnace_side.png", 
+		"furnace_side.png", 
+		"furnace_front_active.png"
+	},
 	paramtype2 = "facedir",
 	light_source = 8,
 	drop = "default:furnace",
@@ -724,9 +782,11 @@ minetest.register_abm({
 	end,
 })
 
+-- Water and lava nodes
+
 minetest.register_node("default:water_flowing", {
 	description = "Flowing Water",
-	inventory_image = "water.png",
+	tiles = { "water.png" },
 	drawtype = "flowingliquid",
 	special_tiles = {
 		{
@@ -754,9 +814,15 @@ minetest.register_node("default:water_flowing", {
 
 minetest.register_node("default:water_source", {
 	description = "Water Source",
-	inventory_image = "water.png",
 	drawtype = "liquid",
-	tiles = {"water.png"},
+	tiles = { "water.png" },
+	special_tiles = {
+		-- New-style water source material (mostly unused)
+		{
+			name="water.png",
+			backface_culling = false,
+		}
+	},
 	alpha = WATER_ALPHA,
 	paramtype = "light",
 	walkable = false,
@@ -769,6 +835,7 @@ minetest.register_node("default:water_source", {
 	liquid_alternative_flowing = "default:water_flowing",
 	liquid_alternative_source = "default:water_source",
 	liquid_viscosity = WATER_VISC,
+	freezemelt = "default:ice",
 	post_effect_color = {a=64, r=100, g=100, b=200},
 	groups = {water=3, liquid=3, puts_out_fire=1, freezes=1},
 })
@@ -777,6 +844,7 @@ minetest.register_node("default:lava_flowing", {
 	description = "Flowing Lava",
 	inventory_image = "lava.png",
 	drawtype = "flowingliquid",
+	tiles = { "lava_flowing.png" },
 	special_tiles = {
 		{
 			image="lava_flowing.png",
@@ -806,8 +874,15 @@ minetest.register_node("default:lava_flowing", {
 minetest.register_node("default:lava_source", {
 	description = "Lava Source",
 	inventory_image = "lava.png",
+	tiles = { "lava.png" },
 	drawtype = "liquid",
-	tiles = {"lava.png"},
+	special_tiles = {
+		-- New-style lava source material (mostly unused)
+		{
+			name="lava.png",
+			backface_culling = false,
+		}
+	},
 	paramtype = "light",
 	light_source = 14,
 	walkable = false,
