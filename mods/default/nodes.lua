@@ -527,12 +527,14 @@ default.furnace_inactive_formspec =
 
 minetest.register_node("default:furnace", {
 	description = "Furnace",
-	tiles = {"stone.png", 
-	                "stone.png", 
-			"stone.png",
-		        "stone.png", 
-			"stone.png", 
-			"furnace_front.png"},
+	tiles = {
+		"furnace_top.png", 
+		"furnace_bottom.png", 
+		"furnace_side.png",
+		"furnace_side.png", 
+		"furnace_side.png", 
+		"furnace_front.png"
+	},
 	inventory_image = "furnace_front.png",
 	paramtype2 = "facedir",
 	groups = {cracky=2},
@@ -600,12 +602,14 @@ minetest.register_node("default:furnace", {
 
 minetest.register_node("default:furnace_active", {
 	description = "Furnace",
-	tiles = {"stone.png", 
-	                "stone.png", 
-			"stone.png",
-		        "stone.png", 
-			"stone.png", 
-			"furnace_front_active.png"},
+	tiles = {
+		"furnace_top.png", 
+		"furnace_bottom.png", 
+		"furnace_side.png",
+		"furnace_side.png", 
+		"furnace_side.png", 
+		"furnace_front_active.png"
+	},
 	paramtype2 = "facedir",
 	light_source = 8,
 	drop = "default:furnace",
