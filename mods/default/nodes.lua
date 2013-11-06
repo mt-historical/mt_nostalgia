@@ -787,6 +787,7 @@ minetest.register_abm({
 minetest.register_node("default:water_flowing", {
 	description = "Flowing Water",
 	tiles = { "water.png" },
+	inventory_image = "water.png",
 	drawtype = "flowingliquid",
 	special_tiles = {
 		{
@@ -816,6 +817,7 @@ minetest.register_node("default:water_source", {
 	description = "Water Source",
 	drawtype = "liquid",
 	tiles = { "water.png" },
+	inventory_image = "water.png",
 	special_tiles = {
 		-- New-style water source material (mostly unused)
 		{
