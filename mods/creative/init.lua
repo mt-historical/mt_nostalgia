@@ -1,13 +1,28 @@
 -- minetest/creative/init.lua
 
+-- Register a "creative" priv
+minetest.register_privilege("creative", {
+	description = "Can use the creative inventory",
+	give_to_singleplayer = false,
+})
+
 creative_inventory = {}
 creative_inventory.creative_inventory_size = 0
+
+-- Determine if the player is running in creative mode
+function creative_inventory.is_creative(player)
+    playername=player:get_player_name()
+	if minetest.check_player_privs(playername, {creative=true}) or
+	   minetest.setting_getbool("creative_mode") then
+		return true
+	end
+end
 
 -- Create detached creative inventory after loading all mods
 minetest.after(0, function()
 	local inv = minetest.create_detached_inventory("creative", {
 		allow_move = function(inv, from_list, from_index, to_list, to_index, count, player)
-			if minetest.setting_getbool("creative_mode") then
+			if creative_inventory.is_creative(player) then
 				return count
 			else
 				return 0
@@ -17,7 +32,7 @@ minetest.after(0, function()
 			return 0
 		end,
 		allow_take = function(inv, listname, index, stack, player)
-			if minetest.setting_getbool("creative_mode") then
+			if creative_inventory.is_creative(player) then
 				return -1
 			else
 				return 0
@@ -44,7 +59,9 @@ minetest.after(0, function()
 	table.sort(creative_list)
 	inv:set_size("main", #creative_list)
 	for _,itemstring in ipairs(creative_list) do
-		inv:add_item("main", ItemStack(itemstring))
+		local stack = ItemStack(itemstring)
+		stack:set_count(99)
+		inv:add_item("main", stack)
 	end
 	creative_inventory.creative_inventory_size = #creative_list
 	print("creative inventory size: "..dump(creative_inventory.creative_inventory_size))
@@ -55,7 +72,7 @@ local trash = minetest.create_detached_inventory("creative_trash", {
 	-- Allow the stack to be placed and remove it in on_put()
 	-- This allows the creative inventory to restore the stack
 	allow_put = function(inv, listname, index, stack, player)
-		if minetest.setting_getbool("creative_mode") then
+		if creative_inventory.is_creative(player) then
 			return stack:get_count()
 		else
 			return 0
@@ -85,13 +102,13 @@ creative_inventory.set_creative_formspec = function(player, start_i, pagenum)
 end
 minetest.register_on_joinplayer(function(player)
 	-- If in creative mode, modify player's inventory forms
-	if not minetest.setting_getbool("creative_mode") then
+	if not creative_inventory.is_creative(player) then
 		return
 	end
 	creative_inventory.set_creative_formspec(player, 0, 1)
 end)
 minetest.register_on_player_receive_fields(function(player, formname, fields)
-	if not minetest.setting_getbool("creative_mode") then
+	if not creative_inventory.is_creative(player) then
 		return
 	end
 	-- Figure out current page from formspec
@@ -140,10 +157,6 @@ if minetest.setting_getbool("creative_mode") then
 			damage_groups = {fleshy = 10},
 		}
 	})
-	
-	minetest.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack)
-		return true
-	end)
 	
 	function minetest.handle_node_drops(pos, drops, digger)
 		if not digger or not digger:is_player() then
