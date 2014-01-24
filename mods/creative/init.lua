@@ -98,15 +98,15 @@ creative_inventory.set_creative_formspec = function(player, start_i, pagenum)
 			"label[5,1.5;Trash:]"..
 			"list[detached:creative_trash;main;5,2;1,1;]")
 	if (ALL_THE_THINGS) then
-		formspec = formspec.."button[5,0;2.5,1;clear;Remove _ALL_ the things!]".."image_button[6,0.6;2,2;all_the_things.png;clear;]"
+		formspec = formspec.."button[6,2.7;2.5,1;clear;Remove _ALL_ the things!]".."image_button[6,1;2,2;all_the_things.png;clear;]"
 	else
-		formspec = formspec.."button[5,0;2,1;clear;Clear Inventory]"
+		formspec = formspec.."button[6,2;2,1;clear;Clear Inventory]"
 	end
 	player:set_inventory_formspec(formspec)
 end
 creative_inventory.set_survival_formspec = function(player)
 	local formspec = player:get_inventory_formspec()
-	formspec = formspec.."list[detached:creative_trash;main;1,1;1,1;]".."label[1,0.5;Trash:]"
+	formspec = formspec.."list[detached:creative_trash;main;0,2;1,1;]".."label[0,1.5;Trash:]"
 	player:set_inventory_formspec(formspec)
 end
 creative_inventory.clear_inventory = function(player)
