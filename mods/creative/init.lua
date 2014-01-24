@@ -1,5 +1,7 @@
 -- minetest/creative/init.lua
 
+ALL_THE_THINGS = false
+
 -- Register a "creative" priv
 minetest.register_privilege("creative", {
 	description = "Can use the creative inventory",
@@ -72,11 +74,7 @@ local trash = minetest.create_detached_inventory("creative_trash", {
 	-- Allow the stack to be placed and remove it in on_put()
 	-- This allows the creative inventory to restore the stack
 	allow_put = function(inv, listname, index, stack, player)
-		if creative_inventory.is_creative(player) then
 			return stack:get_count()
-		else
-			return 0
-		end
 	end,
 	on_put = function(inv, listname, index, stack, player)
 		inv:set_stack(listname, index, "")
@@ -88,7 +86,7 @@ trash:set_size("main", 1)
 creative_inventory.set_creative_formspec = function(player, start_i, pagenum)
 	pagenum = math.floor(pagenum)
 	local pagemax = math.floor((creative_inventory.creative_inventory_size-1) / (6*4) + 1)
-	player:set_inventory_formspec("size[13,7.5]"..
+	local formspec = ("size[13,7.5]"..
 			--"image[6,0.6;1,2;player.png]"..
 			"list[current_player;main;5,3.5;8,4;]"..
 			"list[current_player;craft;8,0;3,3;]"..
@@ -99,43 +97,62 @@ creative_inventory.set_creative_formspec = function(player, start_i, pagenum)
 			"button[2.7,6.5;1.6,1;creative_next;>>]"..
 			"label[5,1.5;Trash:]"..
 			"list[detached:creative_trash;main;5,2;1,1;]")
+	if (ALL_THE_THINGS) then
+		formspec = formspec.."button[5,0;2.5,1;clear;Remove _ALL_ the things!]".."image_button[6,0.6;2,2;all_the_things.png;clear;]"
+	else
+		formspec = formspec.."button[5,0;2,1;clear;Clear Inventory]"
+	end
+	player:set_inventory_formspec(formspec)
+end
+creative_inventory.set_survival_formspec = function(player)
+	local formspec = player:get_inventory_formspec()
+	formspec = formspec.."list[detached:creative_trash;main;1,1;1,1;]".."label[1,0.5;Trash:]"
+	player:set_inventory_formspec(formspec)
+end
+creative_inventory.clear_inventory = function(player)
+		player:get_inventory():set_list("main", {})
+		local player_name = player:get_player_name()
+		minetest.chat_send_player(player_name, 'Inventory Cleared!')
 end
 minetest.register_on_joinplayer(function(player)
 	-- If in creative mode, modify player's inventory forms
 	if not creative_inventory.is_creative(player) then
+		creative_inventory.set_survival_formspec(player)
 		return
 	end
 	creative_inventory.set_creative_formspec(player, 0, 1)
 end)
 minetest.register_on_player_receive_fields(function(player, formname, fields)
-	if not creative_inventory.is_creative(player) then
-		return
-	end
 	-- Figure out current page from formspec
 	local current_page = 0
 	local formspec = player:get_inventory_formspec()
 	local start_i = string.match(formspec, "list%[detached:creative;main;[%d.]+,[%d.]+;[%d.]+,[%d.]+;(%d+)%]")
 	start_i = tonumber(start_i) or 0
 
-	if fields.creative_prev then
-		start_i = start_i - 4*6
+	if fields.clear then
+		creative_inventory.clear_inventory(player)
 	end
-	if fields.creative_next then
-		start_i = start_i + 4*6
-	end
+	if creative_inventory.is_creative(player) then
+		if fields.creative_prev then
+			start_i = start_i - 4*6
+		end
+		if fields.creative_next then
+			start_i = start_i + 4*6
+		end
 
-	if start_i < 0 then
-		start_i = start_i + 4*6
-	end
-	if start_i >= creative_inventory.creative_inventory_size then
-		start_i = start_i - 4*6
-	end
+		if start_i < 0 then
+			start_i = start_i + 4*6
+		end
+		if start_i >= creative_inventory.creative_inventory_size then
+			start_i = start_i - 4*6
+		end
 		
-	if start_i < 0 or start_i >= creative_inventory.creative_inventory_size then
-		start_i = 0
-	end
+		if start_i < 0 or start_i >= creative_inventory.creative_inventory_size then
+			start_i = 0
+		end
 
-	creative_inventory.set_creative_formspec(player, start_i, start_i / (6*4) + 1)
+		creative_inventory.set_creative_formspec(player, start_i, start_i / (6*4) + 1)
+	end
 end)
 
 if minetest.setting_getbool("creative_mode") then
