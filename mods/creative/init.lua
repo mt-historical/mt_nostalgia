@@ -62,7 +62,7 @@ minetest.after(0, function()
 	inv:set_size("main", #creative_list)
 	for _,itemstring in ipairs(creative_list) do
 		local stack = ItemStack(itemstring)
-		stack:set_count(99)
+		stack:set_count(stack:get_stack_max())
 		inv:add_item("main", stack)
 	end
 	creative_inventory.creative_inventory_size = #creative_list
@@ -83,6 +83,31 @@ local trash = minetest.create_detached_inventory("creative_trash", {
 trash:set_size("main", 1)
 
 
+-- Create the refill field
+local refill = minetest.create_detached_inventory("creative_refill", {
+	-- Allow the stack to be placed and remove it in on_put()
+	-- This allows the creative inventory to restore the stack
+	allow_put = function(inv, listname, index, stack, player)
+			return stack:get_count()
+	end,
+	on_put = function(inv, listname, index, stack, player)
+	if stack:get_wear() == 0 then
+			inv:set_stack(listname, index, "")
+			stack:set_count(stack:get_stack_max())
+			inv:add_item("main", stack)
+	else
+		print("Tool detected in refill slot. Current wear is: "..tostring(stack:get_wear())..". Will add "..tostring((-1)*stack:get_wear()).." wear.")
+		stack:add_wear((-1)*stack:get_wear())
+		print("Tool now has "..tostring(stack:get_wear()).." wear.")
+		inv:set_stack(listname, index, "")
+		inv:add_item("main", stack)
+	end
+
+	end,
+})
+refill:set_size("main", 1)
+
+
 creative_inventory.set_creative_formspec = function(player, start_i, pagenum)
 	pagenum = math.floor(pagenum)
 	local pagemax = math.floor((creative_inventory.creative_inventory_size-1) / (6*4) + 1)
@@ -96,7 +121,9 @@ creative_inventory.set_creative_formspec = function(player, start_i, pagenum)
 			"button[0.3,6.5;1.6,1;creative_prev;<<]"..
 			"button[2.7,6.5;1.6,1;creative_next;>>]"..
 			"label[5,1.5;Trash:]"..
-			"list[detached:creative_trash;main;5,2;1,1;]")
+			"list[detached:creative_trash;main;5,2;1,1;]"..
+			"label[5,0;Refill:]"..
+			"list[detached:creative_refill;main;5,0.5;1,1;]")
 	if (ALL_THE_THINGS) then
 		formspec = formspec.."button[6,2.7;2.5,1;clear;Remove _ALL_ the things!]".."image_button[6,1;2,2;all_the_things.png;clear;]"
 	else
