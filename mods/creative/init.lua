@@ -1,6 +1,18 @@
 -- minetest/creative/init.lua
 
-ALL_THE_THINGS = false
+-- SETTINGS --
+
+-- Shows the trash slot to players in survival mode
+local SURVIVAL_TRASH = true
+
+-- "Special" Mode
+local ALL_THE_THINGS = false
+
+-- END OF SETTINGS --
+
+
+
+
 
 -- Register a "creative" priv
 minetest.register_privilege("creative", {
@@ -133,7 +145,9 @@ creative_inventory.set_creative_formspec = function(player, start_i, pagenum)
 end
 creative_inventory.set_survival_formspec = function(player)
 	local formspec = player:get_inventory_formspec()
-	formspec = formspec.."list[detached:creative_trash;main;0,2;1,1;]".."label[0,1.5;Trash:]"
+	if (SURVIVAL_TRASH) then
+		formspec = formspec.."list[detached:creative_trash;main;0,2;1,1;]".."label[0,1.5;Trash:]"
+	end
 	player:set_inventory_formspec(formspec)
 end
 creative_inventory.clear_inventory = function(player)
